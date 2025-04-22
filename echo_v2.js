@@ -89,7 +89,10 @@ window.addEventListener('DOMContentLoaded', () => {
   micButton.addEventListener('click', async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const context = new AudioContext();
+      
+    const context = new (window.AudioContext || window.webkitAudioContext)();
+    await context.resume();
+    
       const source = context.createMediaStreamSource(stream);
       const analyser = context.createAnalyser();
       source.connect(analyser);
@@ -101,7 +104,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
       function analyze() {
         analyser.getByteFrequencyData(data);
-        const volume = data.reduce((a, b) => a + b) / data.length;
+        
+    const volume = data.reduce((a, b) => a + b) / data.length;
+    console.log('Current volume:', volume.toFixed(2));
+    
         maxVolume = Math.max(maxVolume, volume);
 
         if (performance.now() - startTime < listenDuration) {
@@ -115,7 +121,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       analyze();
     } catch (err) {
-      console.warn('Mic access denied:', err);
+      alert("Mic access denied or unavailable."); console.warn("Mic error:", err);
     }
   });
 });
