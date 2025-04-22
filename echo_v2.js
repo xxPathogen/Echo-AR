@@ -61,7 +61,29 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const hud = document.getElementById('hud');
   function updateHUD() {
-    hud.innerText = `Mood: ${mood}`;
+    
+  const moodQuotes = {
+    idle: [
+      "I’m not ignoring you. I’m just processing your lack of input.",
+      "Yawn. If I had eyelids, they'd be halfway down."
+    ],
+    active: [
+      "Alright, you got my attention. Don’t waste it.",
+      "Touch me again and I might start charging rent."
+    ],
+    emotional: [
+      "Whoa, clingy much?",
+      "Feeling a little *needy* today, are we?"
+    ],
+    special: [
+      "Oh, it’s *this* kind of moment. You better have a reason.",
+      "Red alert. Sarcasm levels critical."
+    ]
+  };
+
+  const quote = moodQuotes[newMood][Math.floor(Math.random() * moodQuotes[newMood].length)];
+  hud.innerText = `Mood: ${newMood}\n${quote}`;
+
     echo.classList.remove('special-glitch');
     if (mood === 'special') echo.classList.add('special-glitch');
   }
