@@ -109,6 +109,15 @@
     <div id="hud-label">Mood: idle</div>
     <div id="hud-quote"></div>
     <button id="mic-button">🎙️ Listen</button>
+    <div id="volume-bar" style="margin-top:6px; height:6px; background:#444; width:100%; border-radius:3px;">
+      <div id="volume-fill" style="height:100%; width:0%; background:lime; transition: width 0.2s ease;"></div>
+    </div>
+    <div style="margin-top:8px;">
+      <button onclick="updateMood('idle')">Idle</button>
+      <button onclick="updateMood('active')">Active</button>
+      <button onclick="updateMood('emotional')">Emotional</button>
+      <button onclick="updateMood('special')">Special</button>
+    </div>
   </div>
 </body>
 </html>

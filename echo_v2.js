@@ -99,6 +99,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       const data = new Uint8Array(analyser.frequencyBinCount);
       let maxVolume = 0;
+    const volumeFill = document.getElementById('volume-fill');
       const listenDuration = 2000;
       const startTime = performance.now();
 
@@ -106,15 +107,18 @@ window.addEventListener('DOMContentLoaded', () => {
         analyser.getByteFrequencyData(data);
         
     const volume = data.reduce((a, b) => a + b) / data.length;
+    
     console.log('Current volume:', volume.toFixed(2));
+    if (volumeFill) volumeFill.style.width = Math.min(100, volume) + '%';
+    
     
         maxVolume = Math.max(maxVolume, volume);
 
         if (performance.now() - startTime < listenDuration) {
           requestAnimationFrame(analyze);
         } else {
-          if (maxVolume > 90) updateMood('special');
-          else if (maxVolume > 60) updateMood('emotional');
+          if (maxVolume > 70) updateMood('special');
+          else if (maxVolume > 40) updateMood('emotional');
           else updateMood('idle');
         }
       }
