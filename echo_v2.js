@@ -1,18 +1,25 @@
 
 window.addEventListener('DOMContentLoaded', () => {
   const echo = document.getElementById('echo');
+  const glow = document.getElementById('glow-overlay');
+  const ring = document.getElementById('ring-effect');
+
   if (!echo) return;
 
   echo.addEventListener('click', () => {
-    console.log('Tapped: color pulse');
-    echo.setAttribute('exposure', '1.8');
-    setTimeout(() => echo.setAttribute('exposure', '1.2'), 300);
+    console.log('Tapped!');
+    glow.style.opacity = 1;
+    ring.classList.remove('active'); // reset
+    void ring.offsetWidth; // force reflow
+    ring.classList.add('active');
+    setTimeout(() => (glow.style.opacity = 0), 300);
   });
 
-  // Simulated proximity trigger after 5 seconds
   setTimeout(() => {
-    console.log('Auto-proximity hue shift');
-    echo.setAttribute('shadow-intensity', '2.0');
-    setTimeout(() => echo.setAttribute('shadow-intensity', '1.0'), 500);
+    console.log('Auto-trigger proximity flash');
+    glow.style.opacity = 1;
+    ring.classList.remove('active'); void ring.offsetWidth;
+    ring.classList.add('active');
+    setTimeout(() => (glow.style.opacity = 0), 500);
   }, 5000);
 });
