@@ -83,3 +83,41 @@ ${quote}`;
     setTimeout(() => glow.style.opacity = 0, 500);
   }, 5000);
 });
+
+
+  const micButton = document.getElementById('mic-button');
+
+  micButton.addEventListener('click', async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const context = new AudioContext();
+      const source = context.createMediaStreamSource(stream);
+      const analyser = context.createAnalyser();
+      source.connect(analyser);
+
+      const data = new Uint8Array(analyser.frequencyBinCount);
+      let maxVolume = 0;
+
+      const listenDuration = 2000;
+      const startTime = performance.now();
+
+      function analyze() {
+        analyser.getByteFrequencyData(data);
+        const volume = data.reduce((a, b) => a + b) / data.length;
+        maxVolume = Math.max(maxVolume, volume);
+
+        if (performance.now() - startTime < listenDuration) {
+          requestAnimationFrame(analyze);
+        } else {
+          console.log('Max Volume:', maxVolume);
+          if (maxVolume > 90) updateMood('special');
+          else if (maxVolume > 60) updateMood('emotional');
+          else updateMood('idle');
+        }
+      }
+
+      analyze();
+    } catch (err) {
+      console.warn('Mic access denied:', err);
+    }
+  });
