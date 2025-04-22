@@ -16,6 +16,19 @@
       width: 100vw;
       height: 100vh;
     }
+    #controls {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      z-index: 10;
+      display: none;
+      opacity: 0.8;
+    }
+    #controls button {
+      margin: 2px;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -31,5 +44,27 @@
     exposure="1.2"
     class="idle">
   </model-viewer>
+
+  <div id="controls">
+    <button onclick="setEchoState('idle')">Idle</button>
+    <button onclick="setEchoState('active')">Active</button>
+    <button onclick="setEchoState('special')">Special</button>
+    <button onclick="triggerGlitch()">Glitch</button>
+  </div>
+
+  <script>
+    let tapCount = 0;
+    let tapTimeout;
+    document.body.addEventListener('click', () => {
+      clearTimeout(tapTimeout);
+      tapCount++;
+      if (tapCount >= 5) {
+        document.getElementById('controls').style.display = 'block';
+        tapCount = 0;
+      } else {
+        tapTimeout = setTimeout(() => tapCount = 0, 1000);
+      }
+    });
+  </script>
 </body>
 </html>
