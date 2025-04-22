@@ -6,10 +6,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const echo = document.getElementById('echo');
   const glow = document.getElementById('glow-overlay');
   const ring = document.getElementById('ring-effect');
-  const hud = document.getElementById('hud');
+  const label = document.getElementById('hud-label');
+  const quote = document.getElementById('hud-quote');
+  const micButton = document.getElementById('mic-button');
 
-  if (!echo || !glow || !ring || !hud) {
-    console.warn('Missing element references');
+  if (!echo || !glow || !ring || !label || !quote || !micButton) {
+    console.warn('Missing UI elements');
     return;
   }
 
@@ -44,26 +46,26 @@ window.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('echoMood', newMood);
 
     const color = moodColor[mood] || moodColor.idle;
-    const quote = moodQuotes[mood][Math.floor(Math.random() * moodQuotes[mood].length)];
+    const line = moodQuotes[mood][Math.floor(Math.random() * moodQuotes[mood].length)];
 
     glow.style.background = `radial-gradient(circle at center, ${color}, transparent 70%)`;
     ring.style.borderColor = color.replace('0.3', '1').replace('0.4', '1');
-    hud.innerText = `Mood: ${mood}
-${quote}`;
+
+    label.innerText = `Mood: ${mood}`;
+    quote.innerText = line;
 
     echo.classList.remove('special-glitch');
     if (mood === 'special') echo.classList.add('special-glitch');
   }
 
-  // Load previous mood
+  // Restore saved mood
   const saved = localStorage.getItem('echoMood');
   if (saved && moodColor[saved]) updateMood(saved);
 
   echo.addEventListener('click', () => {
     tapCount++;
     glow.style.opacity = 1;
-    ring.classList.remove('active');
-    void ring.offsetWidth;
+    ring.classList.remove('active'); void ring.offsetWidth;
     ring.classList.add('active');
     setTimeout(() => glow.style.opacity = 0, 300);
 
@@ -75,18 +77,15 @@ ${quote}`;
     }
   });
 
-  // Auto test proximity effect
+  // Simulated proximity test
   setTimeout(() => {
     glow.style.opacity = 1;
     ring.classList.remove('active'); void ring.offsetWidth;
     ring.classList.add('active');
     setTimeout(() => glow.style.opacity = 0, 500);
   }, 5000);
-});
 
-
-  const micButton = document.getElementById('mic-button');
-
+  // Voice listening trigger
   micButton.addEventListener('click', async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -97,7 +96,6 @@ ${quote}`;
 
       const data = new Uint8Array(analyser.frequencyBinCount);
       let maxVolume = 0;
-
       const listenDuration = 2000;
       const startTime = performance.now();
 
@@ -109,7 +107,6 @@ ${quote}`;
         if (performance.now() - startTime < listenDuration) {
           requestAnimationFrame(analyze);
         } else {
-          console.log('Max Volume:', maxVolume);
           if (maxVolume > 90) updateMood('special');
           else if (maxVolume > 60) updateMood('emotional');
           else updateMood('idle');
@@ -121,3 +118,4 @@ ${quote}`;
       console.warn('Mic access denied:', err);
     }
   });
+});
