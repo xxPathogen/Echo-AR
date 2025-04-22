@@ -89,43 +89,39 @@ window.addEventListener('DOMContentLoaded', () => {
   micButton.addEventListener('click', async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
-    const context = new (window.AudioContext || window.webkitAudioContext)();
-    await context.resume();
-    
+      const context = new AudioContext();
       const source = context.createMediaStreamSource(stream);
       const analyser = context.createAnalyser();
       source.connect(analyser);
 
       const data = new Uint8Array(analyser.frequencyBinCount);
       let maxVolume = 0;
-    const volumeFill = document.getElementById('volume-fill');
       const listenDuration = 2000;
       const startTime = performance.now();
 
       function analyze() {
         analyser.getByteFrequencyData(data);
         
-    const volume = data.reduce((a, b) => a + b) / data.length;
-    
-    console.log('Current volume:', volume.toFixed(2));
+    const volume = Math.max(...data);
+    console.log('Current peak volume:', volume.toFixed(2));
     if (volumeFill) volumeFill.style.width = Math.min(100, volume) + '%';
-    
     
         maxVolume = Math.max(maxVolume, volume);
 
         if (performance.now() - startTime < listenDuration) {
           requestAnimationFrame(analyze);
         } else {
-          if (maxVolume > 70) updateMood('special');
-          else if (maxVolume > 40) updateMood('emotional');
+          if (maxVolume > 90) updateMood('special');
+          else if (maxVolume > 60) updateMood('emotional');
           else updateMood('idle');
         }
       }
 
       analyze();
     } catch (err) {
-      alert("Mic access denied or unavailable."); console.warn("Mic error:", err);
+      console.warn('Mic access denied:', err);
     }
   });
 });
+
+window.updateMood = updateMood;
