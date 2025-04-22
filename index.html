@@ -2,34 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Echo AR Orb</title>
+  <title>Echo Minimal Test</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <script src="echo_v2.js"></script>
-  <link rel="stylesheet" href="echo_v2.css" />
   <style>
     body {
       margin: 0;
-      background-color: #000;
-      overflow: hidden;
+      background-color: black;
     }
     model-viewer {
       width: 100vw;
       height: 100vh;
+    }
+    #hud {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: lime;
+      font-family: monospace;
+      background: rgba(0,0,0,0.6);
+      padding: 6px 10px;
+      border-radius: 4px;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
   <model-viewer id="echo"
     src="echo_orb_final_v2.glb"
-    alt="Echo AR Orb"
+    alt="Echo Orb"
     auto-rotate
     camera-controls
-    ar
-    ar-modes="scene-viewer webxr quick-look"
     environment-image="neutral"
     shadow-intensity="1"
-    exposure="1.2"
-    class="idle">
+    exposure="1.1">
   </model-viewer>
+
+  <div id="hud">Status: Loaded</div>
 </body>
 </html>
