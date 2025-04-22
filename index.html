@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Echo AR Orb</title>
+  <title>Echo AR Mood Viewer</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script src="echo.js"></script>
+  <link rel="stylesheet" href="echo.css" />
   <style>
     body {
       margin: 0;
@@ -17,7 +19,7 @@
   </style>
 </head>
 <body>
-  <model-viewer
+  <model-viewer id="echo"
     src="echo_orb_final_fixed.glb"
     alt="Echo AR Orb"
     auto-rotate
@@ -26,7 +28,8 @@
     ar-modes="scene-viewer webxr quick-look"
     environment-image="neutral"
     shadow-intensity="1"
-    exposure="1.2">
+    exposure="1.2"
+    class="idle">
   </model-viewer>
 </body>
 </html>
