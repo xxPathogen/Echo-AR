@@ -1,33 +1,18 @@
 
-function setEchoState(state) {
-  const echo = document.getElementById('echo');
-  echo.classList.remove('idle', 'active', 'special');
-  echo.classList.add(state);
-}
-
-function triggerGlitch() {
-  const echo = document.getElementById('echo');
-  echo.classList.add('special');
-  setTimeout(() => echo.classList.remove('special'), 1000);
-}
-
-// Echo interaction test logic
 window.addEventListener('DOMContentLoaded', () => {
   const echo = document.getElementById('echo');
   if (!echo) return;
 
   echo.addEventListener('click', () => {
-    console.log('Tapped!');
-    echo.style.filter = 'brightness(1.5)';
-    setTimeout(() => echo.style.filter = '', 300);
+    console.log('Tapped: color pulse');
+    echo.setAttribute('exposure', '1.8');
+    setTimeout(() => echo.setAttribute('exposure', '1.2'), 300);
   });
 
+  // Simulated proximity trigger after 5 seconds
   setTimeout(() => {
-    console.log('Proximity auto-test triggered');
-    echo.style.filter = 'hue-rotate(120deg)';
-    setTimeout(() => echo.style.filter = '', 500);
+    console.log('Auto-proximity hue shift');
+    echo.setAttribute('shadow-intensity', '2.0');
+    setTimeout(() => echo.setAttribute('shadow-intensity', '1.0'), 500);
   }, 5000);
 });
-
-window.setEchoState = setEchoState;
-window.triggerGlitch = triggerGlitch;
