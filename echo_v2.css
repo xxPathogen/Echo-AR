@@ -1,0 +1,27 @@
+
+model-viewer.idle {
+  animation: slow-pulse 10s infinite;
+}
+model-viewer.active {
+  animation: fast-pulse 2s infinite;
+}
+model-viewer.special {
+  filter: hue-rotate(-30deg) brightness(1.3);
+  animation: glitch 0.3s infinite;
+}
+@keyframes slow-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.01); }
+}
+@keyframes fast-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+@keyframes glitch {
+  0% { opacity: 1; }
+  20% { opacity: 0.8; transform: translateX(-1px); }
+  40% { opacity: 1; transform: translateX(1px); }
+  60% { opacity: 0.85; transform: translateY(-1px); }
+  80% { opacity: 1; transform: translateY(1px); }
+  100% { opacity: 1; transform: translateX(0); transform: translateY(0); }
+}
