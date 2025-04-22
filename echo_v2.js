@@ -6,9 +6,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const echo = document.getElementById('echo');
   const glow = document.getElementById('glow-overlay');
   const ring = document.getElementById('ring-effect');
+  const hud = document.getElementById('hud');
 
-  if (!echo || !glow || !ring) {
-    console.warn('Missing orb or overlays');
+  if (!echo || !glow || !ring || !hud) {
+    console.warn('Missing element references');
     return;
   }
 
@@ -19,49 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
     special: 'rgba(255,0,0,0.4)'
   };
 
-  function updateMood(newMood) {
-    console.log('Mood:', newMood);
-    mood = newMood;
-    localStorage.setItem('echoMood', newMood);
-    glow.style.background = `radial-gradient(circle at center, ${moodColor[newMood]}, transparent 70%)`;
-    ring.style.borderColor = moodColor[newMood].replace('0.3', '1').replace('0.4', '1');
-  }
-
-  const saved = localStorage.getItem('echoMood');
-  if (saved && moodColor[saved]) {
-    updateMood(saved);
-  }
-
-  echo.addEventListener('click', () => {
-    tapCount++;
-    console.log('Tap count:', tapCount);
-    glow.style.opacity = 1;
-    ring.classList.remove('active');
-    void ring.offsetWidth;
-    ring.classList.add('active');
-    setTimeout(() => glow.style.opacity = 0, 300);
-
-    if (tapCount === 1) updateMood('active');
-    if (tapCount === 5) updateMood('emotional');
-    if (tapCount === 10) {
-      updateMood('special');
-      tapCount = 0;
-    }
-  });
-
-  // Auto-test
-  setTimeout(() => {
-    console.log('Auto-trigger: proximity');
-    glow.style.opacity = 1;
-    ring.classList.remove('active'); void ring.offsetWidth;
-    ring.classList.add('active');
-    setTimeout(() => glow.style.opacity = 0, 500);
-  }, 5000);
-});
-
-  const hud = document.getElementById('hud');
-  function updateHUD() {
-    
   const moodQuotes = {
     idle: [
       "I’m not ignoring you. I’m just processing your lack of input.",
@@ -81,15 +39,47 @@ window.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
-  const quote = moodQuotes[newMood][Math.floor(Math.random() * moodQuotes[newMood].length)];
-  hud.innerText = `Mood: ${newMood}\n${quote}`;
+  function updateMood(newMood) {
+    mood = newMood;
+    localStorage.setItem('echoMood', newMood);
+
+    const color = moodColor[mood] || moodColor.idle;
+    const quote = moodQuotes[mood][Math.floor(Math.random() * moodQuotes[mood].length)];
+
+    glow.style.background = `radial-gradient(circle at center, ${color}, transparent 70%)`;
+    ring.style.borderColor = color.replace('0.3', '1').replace('0.4', '1');
+    hud.innerText = `Mood: ${mood}
+${quote}`;
 
     echo.classList.remove('special-glitch');
     if (mood === 'special') echo.classList.add('special-glitch');
   }
-  updateHUD();
-  const oldUpdateMood = updateMood;
-  updateMood = function(newMood) {
-    oldUpdateMood(newMood);
-    updateHUD();
-  };
+
+  // Load previous mood
+  const saved = localStorage.getItem('echoMood');
+  if (saved && moodColor[saved]) updateMood(saved);
+
+  echo.addEventListener('click', () => {
+    tapCount++;
+    glow.style.opacity = 1;
+    ring.classList.remove('active');
+    void ring.offsetWidth;
+    ring.classList.add('active');
+    setTimeout(() => glow.style.opacity = 0, 300);
+
+    if (tapCount === 1) updateMood('active');
+    if (tapCount === 5) updateMood('emotional');
+    if (tapCount === 10) {
+      updateMood('special');
+      tapCount = 0;
+    }
+  });
+
+  // Auto test proximity effect
+  setTimeout(() => {
+    glow.style.opacity = 1;
+    ring.classList.remove('active'); void ring.offsetWidth;
+    ring.classList.add('active');
+    setTimeout(() => glow.style.opacity = 0, 500);
+  }, 5000);
+});
