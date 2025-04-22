@@ -58,3 +58,16 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => glow.style.opacity = 0, 500);
   }, 5000);
 });
+
+  const hud = document.getElementById('hud');
+  function updateHUD() {
+    hud.innerText = `Mood: ${mood}`;
+    echo.classList.remove('special-glitch');
+    if (mood === 'special') echo.classList.add('special-glitch');
+  }
+  updateHUD();
+  const oldUpdateMood = updateMood;
+  updateMood = function(newMood) {
+    oldUpdateMood(newMood);
+    updateHUD();
+  };
